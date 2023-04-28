@@ -1,5 +1,6 @@
 package com.zincyanide.calculator;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -15,17 +16,19 @@ public class T_Abacus
     {
         Number b = (byte) 1;
         Number d = 8.08D;
-        System.out.println(Abacus.add(b, d));
-        System.out.println(Abacus.subtract(b, d));
-        System.out.println(Abacus.multiply(b, d));
-        System.out.println(Abacus.divide(b, d));
+        Assert.assertEquals(new BigDecimal("9.08"), Abacus.add(b, d));
+        Assert.assertEquals(new BigDecimal("-7.08"), Abacus.subtract(b, d));
+        Assert.assertEquals(new BigDecimal("8.08"), Abacus.multiply(b, d));
+        Assert.assertEquals(new BigDecimal("0.12"), Abacus.divide(b, d));
     }
 
     @Test
     public void t_02_expression()
     {
-        System.out.println(Abacus.calc("4 % 1 ", null));
-        System.out.println(Abacus.calc("0 / 1", null));
+        Assert.assertEquals(new BigDecimal("0.04"),
+                Abacus.calc("4 % 1 ", null));
+        Assert.assertEquals(new BigDecimal("0.00"),
+                Abacus.calc("0 / 1", null));
     }
 
     @Test
@@ -38,8 +41,10 @@ public class T_Abacus
 
         long start = System.nanoTime();
         System.out.println(Abacus.calc("4 * ((5 + 2^3) / 3 + 1 )", null));
-        long end = System.nanoTime();
-        System.out.println("time elapsed: " + (end - start) + " ns"); // 0.32 ms
+        System.out.println("time elapsed: " + (System.nanoTime() - start) + " ns"); // 0.32 ms
+        start = System.nanoTime();
+        System.out.println(Abacus.calc("4 * ((5 + 2^3.1) / 3 + 1 )", null));
+        System.out.println("time elapsed: " + (System.nanoTime() - start) + " ns"); // 0.32 ms
     }
 
     @Test
@@ -52,10 +57,10 @@ public class T_Abacus
             put("ir", 0.7);
         }};
 
-        System.out.println("the Pythagorean theorem: "
-                + Abacus.calc("(#a^2 + #b^2)^0.5", variables));
+        Assert.assertEquals(new BigDecimal("13.00"),
+                Abacus.calc("(#a^2 + #b^2)^0.5", variables));
 
-        System.out.println("principle and interest: " +
+        Assert.assertEquals(new BigDecimal("10070.00"),
                 Abacus.calc("#p + #p % #ir", variables));
     }
 
