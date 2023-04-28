@@ -41,10 +41,10 @@ public class T_Abacus
 
         long start = System.nanoTime();
         System.out.println(Abacus.calc("4 * ((5 + 2^3) / 3 + 1 )", null));
-        System.out.println("time elapsed: " + (System.nanoTime() - start) + " ns"); // 0.32 ms
+        System.out.println("time elapsed: " + (System.nanoTime() - start) + " ns"); // 0.45 ms
         start = System.nanoTime();
         System.out.println(Abacus.calc("4 * ((5 + 2^3.1) / 3 + 1 )", null));
-        System.out.println("time elapsed: " + (System.nanoTime() - start) + " ns"); // 0.32 ms
+        System.out.println("time elapsed: " + (System.nanoTime() - start) + " ns"); // 1.54 ms
     }
 
     @Test
