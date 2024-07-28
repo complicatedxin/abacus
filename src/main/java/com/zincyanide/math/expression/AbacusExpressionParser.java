@@ -1,4 +1,4 @@
-package com.zincyanide.calculator.expression;
+package com.zincyanide.math.expression;
 
 import org.springframework.expression.ParseException;
 import org.springframework.expression.ParserContext;

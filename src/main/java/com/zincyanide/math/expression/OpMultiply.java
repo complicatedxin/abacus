@@ -1,21 +1,16 @@
-package com.zincyanide.calculator.expression;
+package com.zincyanide.math.expression;
 
-import com.zincyanide.calculator.Abacus;
+import com.zincyanide.math.op.Abacus;
 import org.springframework.expression.EvaluationException;
 import org.springframework.expression.Operation;
 import org.springframework.expression.TypedValue;
-import org.springframework.expression.spel.CodeFlow;
 import org.springframework.expression.spel.ExpressionState;
-import org.springframework.expression.spel.ast.OpModulus;
 import org.springframework.expression.spel.ast.SpelNodeImpl;
-import org.springframework.util.NumberUtils;
-
 import java.math.BigDecimal;
-import java.math.BigInteger;
 
-public class OpMod extends OpModulus
+public class OpMultiply extends org.springframework.expression.spel.ast.OpMultiply
 {
-    public OpMod(int startPos, int endPos, SpelNodeImpl... operands)
+    public OpMultiply(int startPos, int endPos, SpelNodeImpl... operands)
     {
         super(startPos, endPos, operands);
     }
@@ -31,15 +26,18 @@ public class OpMod extends OpModulus
             Number leftNumber = (Number) leftOperand;
             Number rightNumber = (Number) rightOperand;
 
-            BigDecimal leftBigDecimal = Abacus.decimalize(leftNumber);
-            BigDecimal rightBigDecimal = Abacus.decimalize(rightNumber);
-
-            Number multiply = Abacus.multiply(leftBigDecimal, rightBigDecimal);
-            Number percent = Abacus.divide(multiply, 100, 6);
-
-            return new TypedValue(percent);
+            return new TypedValue(Abacus.multiply(leftNumber, rightNumber));
         }
 
-        return state.operate(Operation.MODULUS, leftOperand, rightOperand);
+        if (leftOperand instanceof String && rightOperand instanceof Integer) {
+            int repeats = (Integer) rightOperand;
+            StringBuilder result = new StringBuilder();
+            for (int i = 0; i < repeats; i++) {
+                result.append(leftOperand);
+            }
+            return new TypedValue(result.toString());
+        }
+
+        return state.operate(Operation.MULTIPLY, leftOperand, rightOperand);
     }
 }

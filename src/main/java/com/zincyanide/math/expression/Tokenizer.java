@@ -1,4 +1,4 @@
-package com.zincyanide.calculator.expression;
+package com.zincyanide.math.expression;
 
 import org.springframework.expression.spel.InternalParseException;
 import org.springframework.expression.spel.SpelMessage;
@@ -10,7 +10,6 @@ import java.util.List;
 
 class Tokenizer
 {
-
     // If this gets changed, it must remain sorted...
     private static final String[] ALTERNATIVE_OPERATOR_NAMES =
             {"DIV", "EQ", "GE", "GT", "LE", "LT", "MOD", "NE", "NOT"};

@@ -1,8 +1,7 @@
-package com.zincyanide.calculator.expression;
+package com.zincyanide.math.expression;
 
 class Token
 {
-
     TokenKind kind;
 
     String data;

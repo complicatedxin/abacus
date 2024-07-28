@@ -1,6 +1,6 @@
-package com.zincyanide.calculator.expression;
+package com.zincyanide.math.expression;
 
-import com.zincyanide.calculator.Abacus;
+import com.zincyanide.math.op.Abacus;
 import org.springframework.expression.EvaluationException;
 import org.springframework.expression.Operation;
 import org.springframework.expression.TypedValue;
@@ -68,10 +68,7 @@ public class OpMinus extends org.springframework.expression.spel.ast.OpMinus
             Number leftNumber = (Number) left;
             Number rightNumber = (Number) right;
 
-            BigDecimal leftBigDecimal = Abacus.decimalize(leftNumber);
-            BigDecimal rightBigDecimal = Abacus.decimalize(rightNumber);
-
-            return new TypedValue(Abacus.subtract(leftBigDecimal, rightBigDecimal));
+            return new TypedValue(Abacus.subtract(leftNumber, rightNumber));
         }
 
         if (left instanceof String && right instanceof Integer && ((String) left).length() == 1) {

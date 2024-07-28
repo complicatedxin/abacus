@@ -1,8 +1,7 @@
-package com.zincyanide.calculator.expression;
+package com.zincyanide.math.expression;
 
 enum TokenKind
 {
-
     // ordered by priority - operands first
 
     LITERAL_INT,
