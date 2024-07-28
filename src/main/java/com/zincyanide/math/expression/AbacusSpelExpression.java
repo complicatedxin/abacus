@@ -1,4 +1,4 @@
-package com.zincyanide.calculator.expression;
+package com.zincyanide.math.expression;
 
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.spel.*;

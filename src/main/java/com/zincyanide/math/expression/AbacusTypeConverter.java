@@ -1,6 +1,6 @@
-package com.zincyanide.calculator.expression;
+package com.zincyanide.math.expression;
 
-import com.zincyanide.calculator.Abacus;
+import com.zincyanide.math.op.Abacus;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.expression.TypeConverter;
 import java.math.BigDecimal;
@@ -17,6 +17,6 @@ public class AbacusTypeConverter implements TypeConverter
     public Object convertValue(Object value, TypeDescriptor sourceType, TypeDescriptor targetType)
     {
         BigDecimal val = (BigDecimal) value;
-        return Abacus.divide(val, 1, 2);
+        return Abacus.divide(val, 1, 2); // TODO precision
     }
 }

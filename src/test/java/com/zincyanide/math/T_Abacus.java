@@ -1,5 +1,6 @@
-package com.zincyanide.calculator;
+package com.zincyanide.math;
 
+import com.zincyanide.math.op.Abacus;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -26,9 +27,9 @@ public class T_Abacus
     public void t_02_expression()
     {
         Assert.assertEquals(new BigDecimal("0.04"),
-                Abacus.calc("4 % 1 ", null));
+                Calculator.calc("4 % 1 ", null));
         Assert.assertEquals(new BigDecimal("0.00"),
-                Abacus.calc("0 / 1", null));
+                Calculator.calc("0 / 1", null));
     }
 
     @Test
@@ -36,14 +37,14 @@ public class T_Abacus
     {
         for (int i = 0; i < 500; i++)
         {
-            Number number = Abacus.calc("4 * ((5 + 2) / 3 + 1 )", null);
+            Number number = Calculator.calc("4 * ((5 + 2) / 3 + 1 )", null);
         }
 
         long start = System.nanoTime();
-        System.out.println(Abacus.calc("4 * ((5 + 2^3) / 3 + 1 )", null));
+        System.out.println(Calculator.calc("4 * ((5 + 2^3) / 3 + 1 )", null));
         System.out.println("time elapsed: " + (System.nanoTime() - start) + " ns"); // 0.45 ms
         start = System.nanoTime();
-        System.out.println(Abacus.calc("4 * ((5 + 2^3.1) / 3 + 1 )", null));
+        System.out.println(Calculator.calc("4 * ((5 + 2^3.1) / 3 + 1 )", null));
         System.out.println("time elapsed: " + (System.nanoTime() - start) + " ns"); // 1.54 ms
     }
 
@@ -58,10 +59,10 @@ public class T_Abacus
         }};
 
         Assert.assertEquals(new BigDecimal("13.00"),
-                Abacus.calc("(#a^2 + #b^2)^0.5", variables));
+                Calculator.calc("(#a^2 + #b^2)^0.5", variables));
 
         Assert.assertEquals(new BigDecimal("10070.00"),
-                Abacus.calc("#p + #p % #ir", variables));
+                Calculator.calc("#p + #p % #ir", variables));
     }
 
     @Test
