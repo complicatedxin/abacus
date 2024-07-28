@@ -1,13 +1,12 @@
-package com.zincyanide.calculator.expression;
+package com.zincyanide.math.expression;
 
-import com.zincyanide.calculator.Abacus;
+import com.zincyanide.math.op.Abacus;
 import org.springframework.expression.EvaluationException;
 import org.springframework.expression.Operation;
 import org.springframework.expression.TypedValue;
 import org.springframework.expression.spel.ExpressionState;
 import org.springframework.expression.spel.ast.OperatorPower;
 import org.springframework.expression.spel.ast.SpelNodeImpl;
-import java.math.BigDecimal;
 
 public class OpPow extends OperatorPower
 {

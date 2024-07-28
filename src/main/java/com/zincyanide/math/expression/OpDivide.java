@@ -1,6 +1,6 @@
-package com.zincyanide.calculator.expression;
+package com.zincyanide.math.expression;
 
-import com.zincyanide.calculator.Abacus;
+import com.zincyanide.math.op.Abacus;
 import org.springframework.expression.EvaluationException;
 import org.springframework.expression.Operation;
 import org.springframework.expression.TypedValue;
@@ -26,10 +26,7 @@ public class OpDivide extends org.springframework.expression.spel.ast.OpDivide
             Number leftNumber = (Number) leftOperand;
             Number rightNumber = (Number) rightOperand;
 
-            BigDecimal leftBigDecimal = Abacus.decimalize(leftNumber);
-            BigDecimal rightBigDecimal = Abacus.decimalize(rightNumber);
-
-            return new TypedValue(Abacus.divide(leftBigDecimal, rightBigDecimal, 6));
+            return new TypedValue(Abacus.divide(leftNumber, rightNumber, 6)); // TODO precision
         }
 
         return state.operate(Operation.DIVIDE, leftOperand, rightOperand);
