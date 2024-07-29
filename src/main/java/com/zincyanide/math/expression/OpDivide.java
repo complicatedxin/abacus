@@ -10,9 +10,12 @@ import java.math.BigDecimal;
 
 public class OpDivide extends org.springframework.expression.spel.ast.OpDivide
 {
-    public OpDivide(int startPos, int endPos, SpelNodeImpl... operands)
+    private int precision;
+
+    public OpDivide(int precision, int startPos, int endPos, SpelNodeImpl... operands)
     {
         super(startPos, endPos, operands);
+        this.precision = precision;
     }
 
     @Override
@@ -26,7 +29,7 @@ public class OpDivide extends org.springframework.expression.spel.ast.OpDivide
             Number leftNumber = (Number) leftOperand;
             Number rightNumber = (Number) rightOperand;
 
-            return new TypedValue(Abacus.divide(leftNumber, rightNumber, 6)); // TODO precision
+            return new TypedValue(Abacus.divide(leftNumber, rightNumber, precision));
         }
 
         return state.operate(Operation.DIVIDE, leftOperand, rightOperand);

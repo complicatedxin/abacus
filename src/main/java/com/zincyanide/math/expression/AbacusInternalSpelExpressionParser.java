@@ -6,7 +6,6 @@ import org.springframework.expression.common.TemplateAwareExpressionParser;
 import org.springframework.expression.spel.InternalParseException;
 import org.springframework.expression.spel.SpelMessage;
 import org.springframework.expression.spel.SpelParseException;
-import org.springframework.expression.spel.SpelParserConfiguration;
 import org.springframework.expression.spel.ast.*;
 import org.springframework.expression.spel.standard.SpelExpression;
 import org.springframework.lang.Nullable;
@@ -20,7 +19,7 @@ public class AbacusInternalSpelExpressionParser extends TemplateAwareExpressionP
 {
     private static final Pattern VALID_QUALIFIED_ID_PATTERN = Pattern.compile("[\\p{L}\\p{N}_$]+");
 
-    private final SpelParserConfiguration configuration;
+    private final AbacusParserConfiguration configuration;
 
     // For rules that build nodes, they are stacked here for return
     private final Deque<SpelNodeImpl> constructedNodes = new ArrayDeque<>();
@@ -42,7 +41,7 @@ public class AbacusInternalSpelExpressionParser extends TemplateAwareExpressionP
      * Create a parser with some configured behavior.
      * @param configuration custom configuration options
      */
-    public AbacusInternalSpelExpressionParser(SpelParserConfiguration configuration) {
+    public AbacusInternalSpelExpressionParser(AbacusParserConfiguration configuration) {
         this.configuration = configuration;
     }
 
@@ -217,7 +216,7 @@ public class AbacusInternalSpelExpressionParser extends TemplateAwareExpressionP
                 expr = new OpMultiply(t.startPos, t.endPos, expr, rhExpr);
             }
             else if (t.kind == TokenKind.DIV) {
-                expr = new OpDivide(t.startPos, t.endPos, expr, rhExpr);
+                expr = new OpDivide(configuration.getCalcPrecision().getRunningPrecision(), t.startPos, t.endPos, expr, rhExpr);
             }
             else {
                 Assert.isTrue(t.kind == TokenKind.MOD, "Mod token expected");

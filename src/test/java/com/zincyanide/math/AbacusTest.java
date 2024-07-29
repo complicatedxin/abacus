@@ -2,6 +2,7 @@ package com.zincyanide.math;
 
 import com.zincyanide.math.op.Abacus;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -10,10 +11,10 @@ import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 
-public class T_Abacus
+public class AbacusTest
 {
     @Test
-    public void t_01_abacus()
+    public void abacus()
     {
         Number b = (byte) 1;
         Number d = 8.08D;
@@ -24,7 +25,7 @@ public class T_Abacus
     }
 
     @Test
-    public void t_02_expression()
+    public void expression()
     {
         Assert.assertEquals(new BigDecimal("0.04"),
                 Calculator.calc("4 % 1 ", null));
@@ -33,7 +34,7 @@ public class T_Abacus
     }
 
     @Test
-    public void t_03_perform()
+    public void perform()
     {
         for (int i = 0; i < 500; i++)
         {
@@ -49,7 +50,7 @@ public class T_Abacus
     }
 
     @Test
-    public void t_04_interpolation()
+    public void variables()
     {
         Map<String, Number> variables = new HashMap<String, Number>() {{
             put("a", 5);
@@ -66,7 +67,8 @@ public class T_Abacus
     }
 
     @Test
-    public void t_05_sqrt()
+    @Ignore
+    public void sqrt()
     {
         BigDecimal value = BigDecimal.valueOf(2);
         int scale = 2;
@@ -85,6 +87,24 @@ public class T_Abacus
         System.out.println(deviation);
 
         System.out.println(Math.pow(2, 0.5));
+    }
+
+    @Test
+    public void precision()
+    {
+        Map<String, Number> variables = new HashMap<String, Number>() {{
+            put("a", 5);
+            put("b", 12);
+            put("p", 1_0000);
+            put("ir", 0.7);
+        }};
+
+        Assert.assertEquals(new Calculator().precision(3, 4).calc("1 / 200 * 100"),
+                new BigDecimal("0.5000")); // 0.005(0.005) * 100
+
+        Assert.assertEquals(new Calculator().precision(2, 4).calc("1 / 200 * 100"),
+                new BigDecimal("1.0000")); // 0.005(0.01) * 100
+
     }
 
 }
