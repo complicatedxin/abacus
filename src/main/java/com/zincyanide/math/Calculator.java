@@ -13,15 +13,23 @@ public class Calculator
 
     private AbacusStandardEvaluationContext evalContext = new AbacusStandardEvaluationContext();
 
+    private CalcProcess.ProcessStepQueue processStepQueue;
+
     public static BigDecimal calc(String func, Map<String, Number> variables)
     {
-        Calculator calculator = new Calculator();
-        calculator.setVariables(variables);
-        return calculator.calc(func);
+        return new Calculator()
+                .variables(variables)
+                .calc(func);
     }
 
     public BigDecimal calc(String func)
     {
+        if(processStepQueue != null)
+        {
+            processStepQueue.resetProcess();
+            processStepQueue.setFuncExpr(func);
+            parser.setProcessStepQueue(processStepQueue);
+        }
         return parser.parseExpression(func).getValue(evalContext, BigDecimal.class);
     }
 
@@ -44,11 +52,22 @@ public class Calculator
         return this;
     }
 
-    public Calculator setVariables(Map<String, Number> variables)
+    public Calculator variables(Map<String, Number> variables)
     {
         if(variables != null)
             variables.forEach(evalContext::setVariable);
         return this;
+    }
+
+    public Calculator recordProcess(String name)
+    {
+        this.processStepQueue = new CalcProcess.ProcessStepQueue(name, null);
+        return this;
+    }
+
+    public CalcProcess.ProcessStepQueue getProcessStepQueue()
+    {
+        return processStepQueue;
     }
 
 }

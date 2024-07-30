@@ -1,5 +1,6 @@
 package com.zincyanide.math.expression;
 
+import com.zincyanide.math.CalcProcess;
 import com.zincyanide.math.op.Abacus;
 import org.springframework.expression.EvaluationException;
 import org.springframework.expression.Operation;
@@ -12,9 +13,12 @@ import java.math.BigDecimal;
 
 public class OpMod extends OpModulus
 {
-    public OpMod(int startPos, int endPos, SpelNodeImpl... operands)
+    private CalcProcess.ProcessStepQueue processStepQueue;
+
+    public OpMod(CalcProcess.ProcessStepQueue processStepQueue, int startPos, int endPos, SpelNodeImpl... operands)
     {
         super(startPos, endPos, operands);
+        this.processStepQueue = processStepQueue;
     }
 
     @Override
@@ -31,7 +35,10 @@ public class OpMod extends OpModulus
             Number multiply = Abacus.multiply(leftNumber, rightNumber);
             Number percent = Abacus.divide(multiply, 100, 6);
 
-            return new TypedValue(percent);
+            TypedValue typedValue = new TypedValue(percent);
+
+            processStepQueue.recordStep(this.getOperatorName(), typedValue.getValue(), leftNumber, rightNumber);
+            return typedValue;
         }
 
         return state.operate(Operation.MODULUS, leftOperand, rightOperand);

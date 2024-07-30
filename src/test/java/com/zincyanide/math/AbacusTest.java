@@ -107,4 +107,17 @@ public class AbacusTest
 
     }
 
+    @Test
+    public void process()
+    {
+        Calculator calculator = new Calculator();
+        BigDecimal res = calculator
+                .recordProcess("test")
+                .variable("a", 5)
+                .variable("b", 3)
+                .calc("( #a / #b - 1 % 90 ) * 5");
+        System.out.println(calculator.getProcessStepQueue().generateProcessReport());
+        System.out.println(res);
+    }
+
 }

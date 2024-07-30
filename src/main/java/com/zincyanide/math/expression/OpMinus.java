@@ -1,5 +1,6 @@
 package com.zincyanide.math.expression;
 
+import com.zincyanide.math.CalcProcess;
 import com.zincyanide.math.op.Abacus;
 import org.springframework.expression.EvaluationException;
 import org.springframework.expression.Operation;
@@ -11,9 +12,12 @@ import java.math.BigInteger;
 
 public class OpMinus extends org.springframework.expression.spel.ast.OpMinus
 {
-    public OpMinus(int startPos, int endPos, SpelNodeImpl... operands)
+    private CalcProcess.ProcessStepQueue processStepQueue;
+
+    public OpMinus(CalcProcess.ProcessStepQueue processStepQueue, int startPos, int endPos, SpelNodeImpl... operands)
     {
         super(startPos, endPos, operands);
+        this.processStepQueue = processStepQueue;
     }
 
     @Override
@@ -68,7 +72,10 @@ public class OpMinus extends org.springframework.expression.spel.ast.OpMinus
             Number leftNumber = (Number) left;
             Number rightNumber = (Number) right;
 
-            return new TypedValue(Abacus.subtract(leftNumber, rightNumber));
+            TypedValue typedValue = new TypedValue(Abacus.subtract(leftNumber, rightNumber));
+
+            processStepQueue.recordStep(this.getOperatorName(), typedValue.getValue(), leftNumber, rightNumber);
+            return typedValue;
         }
 
         if (left instanceof String && right instanceof Integer && ((String) left).length() == 1) {

@@ -1,5 +1,6 @@
 package com.zincyanide.math.expression;
 
+import com.zincyanide.math.CalcProcess;
 import org.springframework.expression.ParseException;
 import org.springframework.expression.ParserContext;
 import org.springframework.expression.common.TemplateAwareExpressionParser;
@@ -36,6 +37,7 @@ public class AbacusInternalSpelExpressionParser extends TemplateAwareExpressionP
     // Current location in the token stream when processing tokens
     private int tokenStreamPointer;
 
+    private CalcProcess.ProcessStepQueue processStepQueue;
 
     /**
      * Create a parser with some configured behavior.
@@ -195,10 +197,10 @@ public class AbacusInternalSpelExpressionParser extends TemplateAwareExpressionP
             SpelNodeImpl rhExpr = eatProductExpression();
             checkRightOperand(t, rhExpr);
             if (t.kind == TokenKind.PLUS) {
-                expr = new OpPlus(t.startPos, t.endPos, expr, rhExpr);
+                expr = new OpPlus(processStepQueue, t.startPos, t.endPos, expr, rhExpr);
             }
             else if (t.kind == TokenKind.MINUS) {
-                expr = new OpMinus(t.startPos, t.endPos, expr, rhExpr);
+                expr = new OpMinus(processStepQueue, t.startPos, t.endPos, expr, rhExpr);
             }
         }
         return expr;
@@ -213,14 +215,14 @@ public class AbacusInternalSpelExpressionParser extends TemplateAwareExpressionP
             SpelNodeImpl rhExpr = eatPowerIncDecExpression();
             checkOperands(t, expr, rhExpr);
             if (t.kind == TokenKind.STAR) {
-                expr = new OpMultiply(t.startPos, t.endPos, expr, rhExpr);
+                expr = new OpMultiply(processStepQueue, t.startPos, t.endPos, expr, rhExpr);
             }
             else if (t.kind == TokenKind.DIV) {
-                expr = new OpDivide(configuration.getCalcPrecision().getRunningPrecision(), t.startPos, t.endPos, expr, rhExpr);
+                expr = new OpDivide(processStepQueue, configuration.getCalcPrecision().getRunningPrecision(), t.startPos, t.endPos, expr, rhExpr);
             }
             else {
                 Assert.isTrue(t.kind == TokenKind.MOD, "Mod token expected");
-                expr = new OpMod(t.startPos, t.endPos, expr, rhExpr);
+                expr = new OpMod(processStepQueue, t.startPos, t.endPos, expr, rhExpr);
             }
         }
         return expr;
@@ -234,7 +236,7 @@ public class AbacusInternalSpelExpressionParser extends TemplateAwareExpressionP
             Token t = takeToken();  //consume POWER
             SpelNodeImpl rhExpr = eatUnaryExpression();
             checkRightOperand(t, rhExpr);
-            return new OpPow(t.startPos, t.endPos, expr, rhExpr);
+            return new OpPow(processStepQueue, t.startPos, t.endPos, expr, rhExpr);
         }
         if (expr != null && peekToken(TokenKind.INC, TokenKind.DEC)) {
             Token t = takeToken();  //consume INC/DEC
@@ -257,10 +259,10 @@ public class AbacusInternalSpelExpressionParser extends TemplateAwareExpressionP
                 return new OperatorNot(t.startPos, t.endPos, expr);
             }
             if (t.kind == TokenKind.PLUS) {
-                return new OpPlus(t.startPos, t.endPos, expr);
+                return new OpPlus(processStepQueue, t.startPos, t.endPos, expr);
             }
             Assert.isTrue(t.kind == TokenKind.MINUS, "Minus token expected");
-            return new OpMinus(t.startPos, t.endPos, expr);
+            return new OpMinus(processStepQueue, t.startPos, t.endPos, expr);
         }
         if (peekToken(TokenKind.INC, TokenKind.DEC)) {
             Token t = takeToken();
@@ -970,4 +972,13 @@ public class AbacusInternalSpelExpressionParser extends TemplateAwareExpressionP
         return new InternalParseException(new SpelParseException(this.expressionString, startPos, message, inserts));
     }
 
+    public CalcProcess.ProcessStepQueue getProcessStepQueue()
+    {
+        return processStepQueue;
+    }
+
+    public void setProcessStepQueue(CalcProcess.ProcessStepQueue processStepQueue)
+    {
+        this.processStepQueue = processStepQueue;
+    }
 }

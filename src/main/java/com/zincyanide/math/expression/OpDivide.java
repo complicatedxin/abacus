@@ -1,21 +1,24 @@
 package com.zincyanide.math.expression;
 
+import com.zincyanide.math.CalcProcess;
 import com.zincyanide.math.op.Abacus;
 import org.springframework.expression.EvaluationException;
 import org.springframework.expression.Operation;
 import org.springframework.expression.TypedValue;
 import org.springframework.expression.spel.ExpressionState;
 import org.springframework.expression.spel.ast.SpelNodeImpl;
-import java.math.BigDecimal;
 
 public class OpDivide extends org.springframework.expression.spel.ast.OpDivide
 {
     private int precision;
 
-    public OpDivide(int precision, int startPos, int endPos, SpelNodeImpl... operands)
+    private CalcProcess.ProcessStepQueue processStepQueue;
+
+    public OpDivide(CalcProcess.ProcessStepQueue processStepQueue, int precision, int startPos, int endPos, SpelNodeImpl... operands)
     {
         super(startPos, endPos, operands);
         this.precision = precision;
+        this.processStepQueue = processStepQueue;
     }
 
     @Override
@@ -29,7 +32,10 @@ public class OpDivide extends org.springframework.expression.spel.ast.OpDivide
             Number leftNumber = (Number) leftOperand;
             Number rightNumber = (Number) rightOperand;
 
-            return new TypedValue(Abacus.divide(leftNumber, rightNumber, precision));
+            TypedValue typedValue = new TypedValue(Abacus.divide(leftNumber, rightNumber, precision));
+
+            processStepQueue.recordStep(this.getOperatorName(), typedValue.getValue(), leftNumber, rightNumber);
+            return typedValue;
         }
 
         return state.operate(Operation.DIVIDE, leftOperand, rightOperand);

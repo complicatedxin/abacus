@@ -1,5 +1,6 @@
 package com.zincyanide.math.expression;
 
+import com.zincyanide.math.CalcProcess;
 import com.zincyanide.math.op.Abacus;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.expression.EvaluationException;
@@ -12,9 +13,12 @@ import java.math.BigDecimal;
 
 public class OpPlus extends org.springframework.expression.spel.ast.OpPlus
 {
-    public OpPlus(int startPos, int endPos, SpelNodeImpl... operands)
+    private CalcProcess.ProcessStepQueue processStepQueue;
+
+    public OpPlus(CalcProcess.ProcessStepQueue processStepQueue, int startPos, int endPos, SpelNodeImpl... operands)
     {
         super(startPos, endPos, operands);
+        this.processStepQueue = processStepQueue;
     }
 
     @Override
@@ -49,7 +53,10 @@ public class OpPlus extends org.springframework.expression.spel.ast.OpPlus
             Number leftNumber = (Number) leftOperand;
             Number rightNumber = (Number) rightOperand;
 
-            return new TypedValue(Abacus.add(leftNumber, rightNumber));
+            TypedValue typedValue = new TypedValue(Abacus.add(leftNumber, rightNumber));
+
+            processStepQueue.recordStep(this.getOperatorName(), typedValue.getValue(), leftNumber, rightNumber);
+            return typedValue;
         }
 
         if (leftOperand instanceof String && rightOperand instanceof String) {

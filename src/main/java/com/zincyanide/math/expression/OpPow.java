@@ -1,5 +1,6 @@
 package com.zincyanide.math.expression;
 
+import com.zincyanide.math.CalcProcess;
 import com.zincyanide.math.op.Abacus;
 import org.springframework.expression.EvaluationException;
 import org.springframework.expression.Operation;
@@ -10,9 +11,12 @@ import org.springframework.expression.spel.ast.SpelNodeImpl;
 
 public class OpPow extends OperatorPower
 {
-    public OpPow(int startPos, int endPos, SpelNodeImpl... operands)
+    private CalcProcess.ProcessStepQueue processStepQueue;
+
+    public OpPow(CalcProcess.ProcessStepQueue processStepQueue, int startPos, int endPos, SpelNodeImpl... operands)
     {
         super(startPos, endPos, operands);
+        this.processStepQueue = processStepQueue;
     }
 
     @Override
@@ -28,18 +32,21 @@ public class OpPow extends OperatorPower
         {
             Number leftNumber = (Number) leftOperand;
             Number rightNumber = (Number) rightOperand;
+            TypedValue res;
             if(rightNumber instanceof Integer
                     || rightNumber instanceof Byte
                     || rightNumber instanceof Short)
             {
                 Integer rightInteger = rightNumber.intValue();
-                return new TypedValue(Abacus.pow(leftNumber, rightInteger));
+                res = new TypedValue(Abacus.pow(leftNumber, rightInteger));
             }
             else
             {
                 Double rightDouble = rightNumber.doubleValue();
-                return new TypedValue(Abacus.pow(leftNumber, rightDouble));
+                res = new TypedValue(Abacus.pow(leftNumber, rightDouble));
             }
+            processStepQueue.recordStep(this.getOperatorName(), res.getValue(), leftNumber, rightNumber);
+            return res;
         }
 
         return state.operate(Operation.POWER, leftOperand, rightOperand);
