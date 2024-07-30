@@ -9,7 +9,6 @@ import org.springframework.expression.TypeConverter;
 import org.springframework.expression.TypedValue;
 import org.springframework.expression.spel.ExpressionState;
 import org.springframework.expression.spel.ast.SpelNodeImpl;
-import java.math.BigDecimal;
 
 public class OpPlus extends org.springframework.expression.spel.ast.OpPlus
 {
@@ -55,7 +54,8 @@ public class OpPlus extends org.springframework.expression.spel.ast.OpPlus
 
             TypedValue typedValue = new TypedValue(Abacus.add(leftNumber, rightNumber));
 
-            processStepQueue.recordStep(this.getOperatorName(), typedValue.getValue(), leftNumber, rightNumber);
+            if(processStepQueue != null)
+                processStepQueue.recordStep(this.getOperatorName(), typedValue.getValue(), leftNumber, rightNumber);
             return typedValue;
         }
 

@@ -7,7 +7,6 @@ import org.springframework.expression.Operation;
 import org.springframework.expression.TypedValue;
 import org.springframework.expression.spel.ExpressionState;
 import org.springframework.expression.spel.ast.SpelNodeImpl;
-import java.math.BigDecimal;
 
 public class OpMultiply extends org.springframework.expression.spel.ast.OpMultiply
 {
@@ -32,7 +31,8 @@ public class OpMultiply extends org.springframework.expression.spel.ast.OpMultip
 
             TypedValue typedValue = new TypedValue(Abacus.multiply(leftNumber, rightNumber));
 
-            processStepQueue.recordStep(this.getOperatorName(), typedValue.getValue(), leftNumber, rightNumber);
+            if(processStepQueue != null)
+                processStepQueue.recordStep(this.getOperatorName(), typedValue.getValue(), leftNumber, rightNumber);
             return typedValue;
         }
 

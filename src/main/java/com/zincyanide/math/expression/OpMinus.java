@@ -7,6 +7,7 @@ import org.springframework.expression.Operation;
 import org.springframework.expression.TypedValue;
 import org.springframework.expression.spel.ExpressionState;
 import org.springframework.expression.spel.ast.SpelNodeImpl;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
@@ -74,7 +75,8 @@ public class OpMinus extends org.springframework.expression.spel.ast.OpMinus
 
             TypedValue typedValue = new TypedValue(Abacus.subtract(leftNumber, rightNumber));
 
-            processStepQueue.recordStep(this.getOperatorName(), typedValue.getValue(), leftNumber, rightNumber);
+            if(processStepQueue != null)
+                processStepQueue.recordStep(this.getOperatorName(), typedValue.getValue(), leftNumber, rightNumber);
             return typedValue;
         }
 

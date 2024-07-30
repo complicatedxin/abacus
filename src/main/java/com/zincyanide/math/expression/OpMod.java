@@ -9,8 +9,6 @@ import org.springframework.expression.spel.ExpressionState;
 import org.springframework.expression.spel.ast.OpModulus;
 import org.springframework.expression.spel.ast.SpelNodeImpl;
 
-import java.math.BigDecimal;
-
 public class OpMod extends OpModulus
 {
     private CalcProcess.ProcessStepQueue processStepQueue;
@@ -37,7 +35,8 @@ public class OpMod extends OpModulus
 
             TypedValue typedValue = new TypedValue(percent);
 
-            processStepQueue.recordStep(this.getOperatorName(), typedValue.getValue(), leftNumber, rightNumber);
+            if(processStepQueue != null)
+                processStepQueue.recordStep(this.getOperatorName(), typedValue.getValue(), leftNumber, rightNumber);
             return typedValue;
         }
 

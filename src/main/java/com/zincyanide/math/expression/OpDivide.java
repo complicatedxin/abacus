@@ -34,7 +34,8 @@ public class OpDivide extends org.springframework.expression.spel.ast.OpDivide
 
             TypedValue typedValue = new TypedValue(Abacus.divide(leftNumber, rightNumber, precision));
 
-            processStepQueue.recordStep(this.getOperatorName(), typedValue.getValue(), leftNumber, rightNumber);
+            if(processStepQueue != null)
+                processStepQueue.recordStep(this.getOperatorName(), typedValue.getValue(), leftNumber, rightNumber);
             return typedValue;
         }
 

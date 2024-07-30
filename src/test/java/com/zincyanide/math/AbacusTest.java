@@ -115,7 +115,7 @@ public class AbacusTest
                 .recordProcess("test")
                 .variable("a", 5)
                 .variable("b", 3)
-                .calc("( #a / #b - 1 % 90 ) * 5");
+                .calc("( #a / #b - (1 + 2) % 90 ) * 5");
         System.out.println(calculator.getProcessStepQueue().generateProcessReport());
         System.out.println(res);
     }

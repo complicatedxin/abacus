@@ -45,7 +45,9 @@ public class OpPow extends OperatorPower
                 Double rightDouble = rightNumber.doubleValue();
                 res = new TypedValue(Abacus.pow(leftNumber, rightDouble));
             }
-            processStepQueue.recordStep(this.getOperatorName(), res.getValue(), leftNumber, rightNumber);
+
+            if(processStepQueue != null)
+                processStepQueue.recordStep(this.getOperatorName(), res.getValue(), leftNumber, rightNumber);
             return res;
         }
 
