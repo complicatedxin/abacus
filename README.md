@@ -39,7 +39,7 @@ Assert.assertEquals(new BigDecimal("10070.00"),
 `.precision(runningPrecision, finalPrecision, rounding)`设置分为计算中精度、结果精度、凑整规则三个参数
 + 计算中精度：所有计算方式均会在计算中返回给定精度的结果，默认6位
 + 结果精度：表达式结果输出时保留的位数，默认2位
-+ 凑整规则：保留精度位时的取值规则，默认冯五进一
++ 凑整规则：保留精度位时的取值规则，默认逢五进一
 ```java
 Assert.assertEquals(new Calculator().precision(3, 4).calc("1 / 200 * 100"),
         new BigDecimal("0.5000")); // 0.005(0.005) * 100
